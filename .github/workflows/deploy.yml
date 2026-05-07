@@ -26,7 +26,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps:deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -37,11 +37,13 @@ jobs:
           node-version: 20
           cache: 'npm'
       - name: Install dependencies
-        run: npm install
+        run: npm ci || npm install
       - name: Build
         run: npm run build
-      - name: List dist content
-        run: ls -R dist
+      - name: Debug Output
+        run: |
+          echo "Listing dist directory:"
+          ls -R dist || echo "dist directory not found"
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
